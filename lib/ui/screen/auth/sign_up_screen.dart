@@ -1,9 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_app_using_getx/ui/controller/sign_up_controller.dart';
 
-import '../../../data/model/network_response.dart';
-import '../../../data/network_caller/network_caller.dart';
-import '../../../data/utilities/urls.dart';
 import '../../utility/app_colors.dart';
 import '../../utility/app_constants.dart';
 import '../../widget/background_widget.dart';
@@ -25,7 +24,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _mobileTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _showPassword = false;
-  bool _registrationInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -139,20 +137,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(
                     height: 16,
                   ),
-                  Visibility(
-                    visible: _registrationInProgress == false,
-                    replacement: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _registerUser();
-                        }
-                      },
-                      child: const Icon(Icons.arrow_forward_ios_rounded),
-                    ),
-                  ),
+                  GetBuilder<SignUpController>(builder: (signUpController) {
+                    return Visibility(
+                      visible: signUpController.registrationInProgress == false,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            _registerUser();
+                          }
+                        },
+                        child: const Icon(Icons.arrow_forward_ios_rounded),
+                      ),
+                    );
+                  }),
                   const SizedBox(
                     height: 36,
                   ),
@@ -187,40 +187,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _registerUser() async {
-    _registrationInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-    Map<String, dynamic> requestInput = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-      "password": _passwordTEController.text,
-      "photo": ""
-    };
-    NetworkResponse response =
-        await NetworkCaller.postRequest(Urls.registration, body: requestInput);
-    _registrationInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
-    if (response.isSuccess) {
+    final SignUpController signUpController = Get.find<SignUpController>();
+    final result = await signUpController.registerUser(
+        _emailTEController.text.trim(),
+        _firstNameTEController.text.trim(),
+        _lastNameTEController.text.trim(),
+        _mobileTEController.text.trim(),
+        _passwordTEController.text);
+    if (result) {
       _clearTextFields();
-      if (mounted) {
-        showSnackbarMessage(context, 'Registration Success');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MainBottomNavigationScreen(),
-          ),
-        );
-      }
+      showSnackbarMessage(context, 'Registration successful');
+      Get.offAll(() => const MainBottomNavigationScreen());
     } else {
-      if (mounted) {
-        showSnackbarMessage(
-            context, response.errorMessage ?? 'Registration failed! Try again');
-      }
+      showSnackbarMessage(context,
+          signUpController.errorMessage); // Use controller's error message
     }
   }
 

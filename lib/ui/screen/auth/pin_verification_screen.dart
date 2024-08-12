@@ -1,12 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:task_manager_app_using_getx/ui/controller/pin_verification_controller.dart';
 import 'package:task_manager_app_using_getx/ui/screen/auth/reset_password_screen.dart';
 import 'package:task_manager_app_using_getx/ui/screen/auth/sign_in_screen.dart';
 
-import '../../../data/model/network_response.dart';
-import '../../../data/network_caller/network_caller.dart';
-import '../../../data/utilities/urls.dart';
 import '../../utility/app_colors.dart';
 import '../../widget/background_widget.dart';
 import '../../widget/center_progress_indicator.dart';
@@ -23,7 +22,6 @@ class PinVerificationScreen extends StatefulWidget {
 
 class _PinVerificationScreenState extends State<PinVerificationScreen> {
   final TextEditingController _pinTEController = TextEditingController();
-  bool _otpVerificationInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,23 +37,31 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                   const SizedBox(height: 100),
                   Text(
                     'Pin Verification',
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleLarge,
                   ),
                   Text(
                     'A 6 digits verification pin has been sent to your email address',
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleSmall,
                   ),
                   const SizedBox(height: 24),
                   _buildPinCodeTextField(),
                   const SizedBox(height: 16),
-                  Visibility(
-                    visible: _otpVerificationInProgress == false,
-                    replacement: const CenterProgressIndicator(),
-                    child: ElevatedButton(
-                      onPressed: _onTapVerifyOtpButton,
-                      child: const Text('Verify'),
-                    ),
-                  ),
+                  GetBuilder<PinVerificationController>(builder: (pinVerificationController) {
+                    return Visibility(
+                      visible: pinVerificationController.otpVerificationInProgress == false,
+                      replacement: const CenterProgressIndicator(),
+                      child: ElevatedButton(
+                        onPressed: _onTapVerifyOtpButton,
+                        child: const Text('Verify'),
+                      ),
+                    );
+                  }),
                   const SizedBox(height: 36),
                   _buildSignInSection()
                 ],
@@ -81,7 +87,8 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
             TextSpan(
               text: 'Sign in',
               style: const TextStyle(color: AppColors.themeColor),
-              recognizer: TapGestureRecognizer()..onTap = _onTapSignInButton,
+              recognizer: TapGestureRecognizer()
+                ..onTap = _onTapSignInButton,
             )
           ],
         ),
@@ -116,37 +123,19 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const SignInScreen()),
-      (route) => false,
+          (route) => false,
     );
   }
 
-  void _onTapVerifyOtpButton() {
-    _verifyOTP(_pinTEController.text);
-  }
-
-  Future<void> _verifyOTP(String otp) async {
-    setState(() {
-      _otpVerificationInProgress = true;
-    });
-
-    NetworkResponse response =
-        await NetworkCaller.getRequest(Urls.verifyOtp(widget.email, otp));
-
-    setState(() {
-      _otpVerificationInProgress = false;
-    });
-
-    if (response.isSuccess) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              ResetPasswordScreen(email: widget.email, otp: otp),
-        ),
-      );
-    } else {
-      showSnackbarMessage(context,
-          response.errorMessage ?? 'OTP Verification Failed! Try Again');
+  Future<void> _onTapVerifyOtpButton() async {
+    final PinVerificationController pinVerificationController = Get.find<PinVerificationController>();
+    final result = await pinVerificationController.verifyOTP(widget.email, _pinTEController.text);
+    if(result){
+      Get.to(()=>ResetPasswordScreen(email: widget.email, otp: _pinTEController.text));
+    }
+    else{
+      showSnackbarMessage(context, pinVerificationController.errorMessage);
     }
   }
+
 }

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager_app_using_getx/ui/controller/new_task_controller.dart';
 
-import '../../data/model/task_count_by_status_model.dart';
-import '../../data/model/task_model.dart';
 import '../utility/app_colors.dart';
 import '../widget/center_progress_indicator.dart';
 import '../widget/task_item.dart';
@@ -18,8 +16,6 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
-  List<TaskModel> newTaskList = [];
-  List<TaskCountByStatusModel> taskCountByStatusModel = [];
 
   @override
   void initState() {
@@ -28,9 +24,12 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   void _initialCall() {
-    Get.find<NewTaskController>().getTaskStatusCount();
-    Get.find<NewTaskController>().getNewTask();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<NewTaskController>().getTaskStatusCount();
+      Get.find<NewTaskController>().getNewTask();
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +43,9 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GetBuilder<NewTaskController>( // Use GetBuilder for summary section
+          GetBuilder<NewTaskController>(
             builder: (controller) {
-              return _buildSummarySection(controller); // Pass controller
+              return _buildSummarySection(controller);
             },
           ),
           Expanded(

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager_app_using_getx/ui/screen/auth/sign_up_screen.dart';
+import 'package:task_manager_app_using_getx/route/route.dart';
 
 import '../../controller/sign_in_controller.dart';
 import '../../utility/app_colors.dart';
@@ -9,8 +9,6 @@ import '../../utility/app_constants.dart';
 import '../../widget/background_widget.dart';
 import '../../widget/center_progress_indicator.dart';
 import '../../widget/snackbar_message.dart';
-import '../main_bottom_nav_screen.dart';
-import 'email_verification_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -80,7 +78,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   const SizedBox(
                     height: 16,
                   ),
-                  GetBuilder<SignInController>(builder: (signInController) {
+                  GetBuilder<SignInController>(
+                      init: SignInController(),
+                      builder: (signInController) {
                     return Visibility(
                       visible: signInController.signInApiInProgress == false,
                       replacement: const CenterProgressIndicator(),
@@ -135,7 +135,7 @@ class _SignInScreenState extends State<SignInScreen> {
       final bool result = await signInController.signIn(
           _emailTEController.text.trim(), _passwordTEController.text);
       if (result) {
-        Get.offAll(() => const MainBottomNavigationScreen());
+        Get.offAllNamed(mainBottomNav);
       } else {
         if (mounted) {
           showSnackbarMessage(context, signInController.errorMessage);
@@ -145,21 +145,11 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _onTapSignUpButton() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SignUpScreen(),
-      ),
-    );
+    Get.toNamed(signUp);
   }
 
   void _onTapForgetPasswordButton() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const EmailVerificationScreen(),
-      ),
-    );
+    Get.toNamed(emailVerification);
   }
 
   @override

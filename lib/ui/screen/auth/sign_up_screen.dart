@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager_app_using_getx/route/route.dart';
 import 'package:task_manager_app_using_getx/ui/controller/sign_up_controller.dart';
 
 import '../../utility/app_colors.dart';
 import '../../utility/app_constants.dart';
 import '../../widget/background_widget.dart';
 import '../../widget/snackbar_message.dart';
-import '../main_bottom_nav_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -197,10 +197,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (result) {
       _clearTextFields();
       showSnackbarMessage(context, 'Registration successful');
-      Get.offAll(() => const MainBottomNavigationScreen());
+      Get.offAll(() => mainBottomNav);
     } else {
       showSnackbarMessage(context,
-          signUpController.errorMessage); // Use controller's error message
+          signUpController.errorMessage);
     }
   }
 

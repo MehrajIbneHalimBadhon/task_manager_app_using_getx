@@ -7,6 +7,9 @@ import 'completed_task_screen.dart';
 import 'in_progress_task_screen.dart';
 import 'new_task_screen.dart';
 
+
+
+
 class MainBottomNavigationScreen extends StatefulWidget {
   const MainBottomNavigationScreen({super.key});
 
@@ -18,11 +21,11 @@ class MainBottomNavigationScreen extends StatefulWidget {
 class _MainBottomNavigationScreenState
     extends State<MainBottomNavigationScreen> {
   int _selectedIndex = 0;
-  final List<Widget> _screens = const [
-    NewTaskScreen(),
-    CompletedTaskScreen(),
-    InProgressTaskScreen(),
-    CancelledTaskScreen()
+  final List<Widget> _screens =  [
+    const NewTaskScreen(),
+    const CompletedTaskScreen(),
+    const InProgressTaskScreen(),
+    const CancelledTaskScreen()
   ];
 
   @override

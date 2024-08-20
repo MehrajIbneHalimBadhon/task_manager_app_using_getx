@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:task_manager_app_using_getx/route/route.dart';
 
 import '../controller/auth_controller.dart';
-import '../screen/auth/sign_in_screen.dart';
-import '../screen/update_profile_screen.dart';
 import '../utility/app_colors.dart';
 
 AppBar profileAppBar(context, [bool fromUpdateProfile = false]) {
@@ -16,12 +16,7 @@ AppBar profileAppBar(context, [bool fromUpdateProfile = false]) {
         if (fromUpdateProfile) {
           return;
         }
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const UpdateProfileScreen(),
-          ),
-        );
+        Get.toNamed(updateProfile);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -48,12 +43,7 @@ AppBar profileAppBar(context, [bool fromUpdateProfile = false]) {
         if (fromUpdateProfile) {
           return;
         }
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const UpdateProfileScreen(),
-          ),
-        );
+        Get.toNamed(updateProfile);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,12 +66,7 @@ AppBar profileAppBar(context, [bool fromUpdateProfile = false]) {
       IconButton(
           onPressed: () async {
             await AuthController.clearAllData();
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SignInScreen(),
-                ),
-                (route) => false);
+            Get.offAllNamed(signIn);
           },
           icon: const Icon(Icons.logout_outlined))
     ],

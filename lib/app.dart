@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager_app_using_getx/controller_binding.dart';
-import 'package:task_manager_app_using_getx/ui/screen/auth/splash_screen.dart';
+import 'package:task_manager_app_using_getx/route/route.dart';
 import 'package:task_manager_app_using_getx/ui/utility/app_colors.dart';
 
 class TaskManagerApp extends StatefulWidget {
@@ -18,7 +18,8 @@ class _TaskManagerAppState extends State<TaskManagerApp> {
     return GetMaterialApp(
       navigatorKey: TaskManagerApp.navigatorKey,
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
+      getPages: getpages,
+      initialRoute: splash,
       theme: lightTheme(),
       initialBinding: ControllerBinder(),
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_manager_app_using_getx/route/route.dart';
 import 'package:task_manager_app_using_getx/ui/controller/email_verification_controller.dart';
-import 'package:task_manager_app_using_getx/ui/screen/auth/pin_verification_screen.dart';
 
 import '../../utility/app_colors.dart';
 import '../../utility/app_constants.dart';
@@ -123,19 +123,15 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   }
 
   Future<void> _onTapConfirmButton() async {
-    final EmailVerificationController emailVerificationController = Get.find<
-        EmailVerificationController>();
-    final result = await emailVerificationController.verifyEmail(
-      _emailTEController.text.trim(),);
+    final EmailVerificationController emailVerificationController = Get.find<EmailVerificationController>();final result = await emailVerificationController.verifyEmail(_emailTEController.text.trim());
     if (result) {
-      Get.to(() =>
-          PinVerificationScreen(email: _emailTEController.text.trim(),),);
-    }
-    else {
+      Get.toNamed(pinVerification, arguments: {
+        'email': _emailTEController.text.trim(),
+      });
+    } else {
       showSnackbarMessage(context, emailVerificationController.errorMessage);
     }
   }
-
   @override
   void dispose() {
     _emailTEController.dispose();

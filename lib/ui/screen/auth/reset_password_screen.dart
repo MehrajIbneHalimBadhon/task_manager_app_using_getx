@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager_app_using_getx/ui/screen/auth/sign_in_screen.dart';
+import 'package:task_manager_app_using_getx/route/route.dart';
 
 import '../../controller/reset_password_controller.dart';
 import '../../utility/app_colors.dart';
@@ -103,12 +103,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 
   void _onTapSignInButton() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SignInScreen(),
-        ),
-        (route) => false);
+    Get.offAllNamed(signIn);
   }
 
   Future<void> _onTapConfirmButton() async {
@@ -120,7 +115,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           widget.email, widget.otp, _passwordTEController.text);
 
       if (isSuccess) {
-        Get.offAll(() => const SignInScreen());
+        Get.offAllNamed(signIn);
       } else {
         if (mounted) {
           showSnackbarMessage(context, resetPasswordController.errorMessage);

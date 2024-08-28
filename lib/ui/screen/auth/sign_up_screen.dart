@@ -197,7 +197,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (result) {
       _clearTextFields();
       showSnackbarMessage(context, 'Registration successful');
-      Get.offAll(() => mainBottomNav);
+      Get.offAllNamed(signIn);
     } else {
       showSnackbarMessage(context,
           signUpController.errorMessage);

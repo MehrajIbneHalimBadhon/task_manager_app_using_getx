@@ -100,7 +100,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
     );
     if (success) {
       _clearTextFields();
-      Get.back();
+      Get.back(result: true);
     } else {
       showSnackbarMessage(context, addTaskController.errorMessage);
     }

@@ -19,7 +19,7 @@ const String signUp = '/signUp-screen';
 const String resetPasword = '/resetPassword-screen';
 const String pinVerification = '/pinVerification-screen';
 const String emailVerification = '/emailVerification-screen';
-const String addNewTask = '/addNewTask-screen';
+const String addNewTask = '/addNewTask';
 const String cancelledTask = '/cancelledTask-screen';
 const String completedTask = '/completedTask-screen';
 const String inProgressTask = '/inProgressTask-screen';
@@ -58,6 +58,7 @@ List<GetPage> getpages = [
   GetPage(
     name: addNewTask,
     page: () => const AddNewTaskScreen(),
+    transition: Transition.rightToLeft,
   ),
   GetPage(
     name: cancelledTask,

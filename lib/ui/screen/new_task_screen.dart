@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager_app_using_getx/route/route.dart';
+import 'package:task_manager_app_using_getx/ui/controller/add_new_task_controller.dart';
 
 import '../controller/new_task_controller.dart';
 import '../utility/app_colors.dart';
 import '../widget/center_progress_indicator.dart';
 import '../widget/task_item.dart';
 import '../widget/task_summary_card.dart';
+import 'add_new_task.dart';
 
 class NewTaskScreen extends StatefulWidget {
   const NewTaskScreen({super.key});
@@ -30,12 +32,15 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onTapAddButton,
-        backgroundColor: AppColors.themeColor,
-        foregroundColor: AppColors.white,
-        child: const Icon(Icons.add),
-      ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            final addNewTaskController = Get.find<AddNewTaskController>();
+            _onTapAddButton(addNewTaskController);
+          },
+          backgroundColor: AppColors.themeColor,
+          foregroundColor: AppColors.white,
+          child: const Icon(Icons.add),
+        ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -76,13 +81,13 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     );
   }
 
-  Future<void> _onTapAddButton() async {
-    bool? taskAdded = await Get.toNamed(addNewTask);
-
+  Future<void> _onTapAddButton(AddNewTaskController addNewTaskController) async {
+    final bool? taskAdded = await Get.to(() => const AddNewTaskScreen());
     // If a new task was added, refresh the task list
     if (taskAdded == true) {
       _initializeData();
     }
+    debugPrint(taskAdded.toString());
   }
 
   Widget _buildSummarySection(NewTaskController newTaskController) {

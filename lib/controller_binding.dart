@@ -14,17 +14,17 @@ import 'package:task_manager_app_using_getx/ui/controller/update_profile_control
 class ControllerBinder extends Bindings{
   @override
   void dependencies() {
-    Get.lazyPut(() => SignInController());
-    Get.lazyPut(() => SignUpController());
-    Get.lazyPut(() => EmailVerificationController());
-    Get.lazyPut(() => ResetPasswordController());
-    Get.lazyPut(() => PinVerificationController());
-    Get.lazyPut(() => UpdateProfileController());
-    Get.lazyPut(() => NewTaskController());
-    Get.lazyPut(() => AddNewTaskController());
-    Get.lazyPut(() => CompletedTaskController());
-    Get.lazyPut(() => InProgressTaskController());
-    Get.lazyPut(() => CancelledTaskController());
+    Get.put( SignInController());
+    Get.put(SignUpController());
+    Get.put( EmailVerificationController());
+    Get.put( ResetPasswordController());
+    Get.put( PinVerificationController());
+    Get.put( UpdateProfileController());
+    Get.put(NewTaskController());
+    Get.put( AddNewTaskController());
+    Get.put( CompletedTaskController());
+    Get.put(InProgressTaskController());
+    Get.put( CancelledTaskController());
 
   }
 
